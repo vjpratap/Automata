@@ -1,6 +1,6 @@
 var generators = {}
 exports.generators = generators;
-
+var lodash = require('lodash')
 generators.dfaGenerator = function(touple){
 	return function(string){
 		var charString = string.split("");
@@ -11,6 +11,6 @@ generators.dfaGenerator = function(touple){
 		var finalStateOfString = charString.reduce(function (currentState, character){
 			return touple.transitionFunction[currentState][character];
 		}, touple.initialState)
-		return touple.finalState.indexOf(finalStateOfString) >= 0;	
+		return lodash.contains(touple.finalState, finalStateOfString)	
 	} 
 }
