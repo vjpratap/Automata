@@ -4,7 +4,7 @@
   "description": "",
   "main": "dfaGeneraterTest.js",
   "scripts": {
-    "test": "node_modules/.bin/mocha test/dfaGeneraterTest.js"
+    "test": "node_modules/.bin/mocha test"
   },
   "author": "",
   "license": "ISC",
