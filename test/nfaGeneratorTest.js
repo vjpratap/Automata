@@ -43,6 +43,34 @@ var toupleforContaining00Or11 = {
 	}
 }
 
+var toupleForStringThatLenghtIsDivisibleByTwoAndThree = {
+	"alphabet"	: [0],
+	"initialState"	: ["q1"],
+	"finalState"	: ["q3", "q6"],
+	"setOfState"	: ["q1","q2","q3","q4", "q5", "q5"],
+	"transitionFunction"	: {
+		"q1" : {
+			0:["q2","q4"]
+		},
+		"q2" : {
+			0:["q3"]
+		},
+		"q3" : {
+			0:["q2"]
+		},
+		"q4" : {
+			0:["q5"]
+		},
+		"q5" : {
+			0:["q6"]
+		},
+		"q6" : {
+			0:["q4"]
+		}
+
+	}
+}
+
 describe("nfaGenerator test", function() {
 	describe("string that end with 1", function() {
 		var endsWith1 = nfaGenerator(touple)
@@ -72,6 +100,21 @@ describe("nfaGenerator test", function() {
 		})
 		it("it should fail when string doesn't belong to alphabet set", function(){
 			assert.isFalse(stringContainsDoubleZeroOrDoubleOne("1021"))
+		})
+	})
+	describe("string lenght is divisible by two and three", function(){
+		var divisibleByTwoAndThree = nfaGenerator(toupleForStringThatLenghtIsDivisibleByTwoAndThree)
+		it("it should pass for string that lenght is six", function(){
+			assert.isTrue(divisibleByTwoAndThree("000000"))
+		})
+		it("it should fail for string that lenght is five", function(){
+			assert.isFalse(divisibleByTwoAndThree("00000"))
+		})
+		it("it should fail for string that lenght is nine", function(){
+			assert.isTrue(divisibleByTwoAndThree("000000000"))
+		})
+		it("it should pass when string doesn't belong to alphabet set", function(){
+			assert.isFalse(divisibleByTwoAndThree("11111"))
 		})
 	})
 })
