@@ -84,13 +84,13 @@ var toupleForStringStartsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle = {
 describe("dfaGenerator test", function() {
 	describe("string that end with 1", function() {
 		var endsWith1 = generators.dfaGenerator(toupleForStringEndsWithOne)
-		it("for string 001", function() {
+		it("it should pass for string 001", function() {
 			assert.isTrue(endsWith1("001"))
 		})
-		it("for string 100", function(){
+		it("it should fail for string 100", function(){
 			assert.isFalse(endsWith1("100"))
 		})
-		it("for string 1001", function(){
+		it("should pass for string 1001", function(){
 			assert.isTrue(endsWith1("1001"))
 		})
 		it("it should fail when string doesn't belong to alphabet set", function(){
@@ -99,10 +99,10 @@ describe("dfaGenerator test", function() {
 	})
 	describe("string lenght is divisible by two and three", function(){
 		var divisibleByTwoAndThree = generators.dfaGenerator(toupleForStringThatLenghtIsDivisibleByTwoAndThree)
-		it("for string 000000", function(){
+		it("it should pass for string that lenght is six", function(){
 			assert.isTrue(divisibleByTwoAndThree("000000"))
 		})
-		it("for string 00000", function(){
+		it("it should fail for string that lenght is five", function(){
 			assert.isFalse(divisibleByTwoAndThree("00000"))
 		})
 		it("it should fail when string doesn't belong to alphabet set", function(){
@@ -111,22 +111,22 @@ describe("dfaGenerator test", function() {
 	})
 	describe("string starts with double one ends with double one and even number of zeros in middle", function(){
 		var startsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle = generators.dfaGenerator(toupleForStringStartsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle)
-		it("for String 110011", function(){
+		it("it should pass for string 110011", function(){
 			assert.isTrue(startsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle("110011"))
 		})
-		it("for String 11001111", function(){
+		it("it should pass for string 11001111", function(){
 			assert.isTrue(startsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle("11001111"))
 		})
-		it("for String 110001111", function(){
+		it("it should fail for when the number of zeros are odd 110001111", function(){
 			assert.isFalse(startsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle("110001111"))
 		})
-		it("for String 110001111001", function(){
+		it("it should fail string ends with single one 110001111001", function(){
 			assert.isFalse(startsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle("110001111001"))
 		})
-		it("for String 1000011", function(){
+		it("it should pass when string starts with single one 1000011", function(){
 			assert.isFalse(startsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle("1000011"))
 		})
-		it("for String 110002111", function(){
+		it("it should fail when string doesn't belong to alphabet set 110002111", function(){
 			assert.isFalse(startsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle("110002111"))
 		})
 	})

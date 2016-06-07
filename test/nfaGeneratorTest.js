@@ -46,25 +46,28 @@ var toupleforContaining00Or11 = {
 describe("nfaGenerator test", function() {
 	describe("string that end with 1", function() {
 		var endsWith1 = nfaGenerator(touple)
-		it("for string 1001", function() {
+		it("it should pass when string ends with one 1001", function() {
 			assert.isTrue(endsWith1("1001"))
 		})
-		it("for string 10010", function() {
+		it("it should fail when string is not ends with one 10010", function() {
 			assert.isFalse(endsWith1("10010"))
+		})
+		it("it should fail when string doesn't belong to alphabet set", function(){
+			assert.isFalse(endsWith1("1021"))
 		})
 	})
 	describe("string that contains 11 or 00", function() {
 		var stringContainsDoubleZeroOrDoubleOne = nfaGenerator(toupleforContaining00Or11)
-		it("for the string 1001", function() {
+		it("it should pass when string has two zeros continueslly 1001", function() {
 			assert.isTrue(stringContainsDoubleZeroOrDoubleOne("1001"))
 		})
-		it("for string 00", function() {
+		it("it should pass for 00", function() {
 			assert.isTrue(stringContainsDoubleZeroOrDoubleOne("010110"))
 		})
-		it("for string 11", function() {
+		it("it should pass for 11", function() {
 			assert.isTrue(stringContainsDoubleZeroOrDoubleOne("11"))
 		})
-		it("for string 0101010", function() {
+		it("it should fail when there is no zeros and ones it sequence 0101010", function() {
 			assert.isFalse(stringContainsDoubleZeroOrDoubleOne("0101010"))
 		})
 		it("it should fail when string doesn't belong to alphabet set", function(){

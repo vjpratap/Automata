@@ -23,15 +23,16 @@ generators.nfaGenerator = function(touple){
 			return false
 		var finalStateOfString = charString.reduce(function (currentStates, character){
 			var currentStatesArrays = currentStates.map(function(currentState){
-				
 				return touple.transitionFunction[currentState][character]
 			})
-			return currentStatesArrays.reduce(function(initialValue, currentValue){
-				return lodash.union(initialValue, currentValue)
-			})
+			return currentStatesArrays.reduce(getAllCurrentStates)
 		}, touple.initialState)
 		return lodash.intersection(finalStateOfString, touple.finalState).length > 0;
 	}
+}
+
+var getAllCurrentStates = function(previousValue, currentValue){
+	return lodash.union(previousValue, currentValue)
 }
 
 var stringVarify = function(charString, alphabet,string){
