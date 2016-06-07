@@ -11,6 +11,7 @@ generators.dfaGenerator = function(touple){
 		var finalStateOfString = charString.reduce(function (currentState, character){
 			return touple.transitionFunction[currentState][character];
 		}, touple.initialState)
-		return lodash.contains(touple.finalState, finalStateOfString)	
+		return lodash.includes(touple.finalState, finalStateOfString)	
 	} 
 }
+

@@ -47,6 +47,39 @@ var toupleForStringThatLenghtIsDivisibleByTwoAndThree = {
 	"finalState": ["q3","q4","q5","q7"]
 }
 
+var toupleForStringStartsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle = {
+	"setOfState": ["q1","q2","q3","q4","q5","q6"],
+	"alphabet" : [0,1],
+	"transitionFunction" : {
+		"q1": {
+			0: "q6",
+			1: "q2"
+		},
+		"q2": {
+			0: "q6",
+			1: "q3"
+		},
+		"q3": {
+			0: "q4",
+			1: "q3"
+		},
+		"q4": {
+			0: "q5",
+			1: "q6"
+		},
+		"q5": {
+			0: "q4",
+			1: "q2"
+		},
+		"q6": {
+			0: "q6",
+			1: "q6"
+		}
+	},
+	"initialState": "q1",
+	"finalState" :["q3"]
+}
+
 
 describe("dfaGenerator test", function() {
 	describe("string that end with 1", function() {
@@ -74,6 +107,27 @@ describe("dfaGenerator test", function() {
 		})
 		it("it should fail when string doesn't belong to alphabet set", function(){
 			assert.isFalse(divisibleByTwoAndThree("11111"))
+		})
+	})
+	describe("string starts with double one ends with double one and even number of zeros in middle", function(){
+		var startsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle = generators.dfaGenerator(toupleForStringStartsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle)
+		it("for String 110011", function(){
+			assert.isTrue(startsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle("110011"))
+		})
+		it("for String 11001111", function(){
+			assert.isTrue(startsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle("11001111"))
+		})
+		it("for String 110001111", function(){
+			assert.isFalse(startsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle("110001111"))
+		})
+		it("for String 110001111001", function(){
+			assert.isFalse(startsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle("110001111001"))
+		})
+		it("for String 1000011", function(){
+			assert.isFalse(startsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle("1000011"))
+		})
+		it("for String 110002111", function(){
+			assert.isFalse(startsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle("110002111"))
 		})
 	})
 })
