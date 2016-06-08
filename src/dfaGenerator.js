@@ -23,12 +23,22 @@ generators.nfaGenerator = function(touple){
 			return false
 		var finalStatesOfString = charString.reduce(function (currentStates, character){
 			var currentStatesSets = currentStates.map(function(currentState){
+				if(touple.transitionFunction[currentState]["epsilon"]){
+					return epsilonStates(touple.transitionFunction, currentState,character).concat(touple.transitionFunction[currentState][character])
+				}
 				return touple.transitionFunction[currentState][character]
 			})
 			return currentStatesSets.reduce(getAllCurrentStates)
 		}, touple.initialState)
 		return isStringFinalStatesContainsFinalState(finalStatesOfString, touple.finalState);
 	}
+}
+
+var epsilonStates = function(transitionFunction, currentState, character){
+	var epsilonCurrentStates = transitionFunction[currentState]["epsilon"]
+	return epsilonCurrentStates.map(function(epsilonCurrentState){
+			return transitionFunction[epsilonCurrentState][character]
+	})
 }
 
 var isStringFinalStatesContainsFinalState = function(finalStatesOfString, finalStates){

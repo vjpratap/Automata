@@ -2,9 +2,14 @@ var assert = require("chai").assert;
 var nfaGenerator = require("../src/dfaGenerator.js").generators.nfaGenerator;
 
 var touple = {
-	"setOfState": ["q1","q2"], 
+	"setOfState": ["q3","q1","q2"], 
 	"alphabet": [0,1], 
 	"transitionFunction": {
+		"q3":{
+			"epsilon" :["q1"],
+			0: [],
+			1: []
+		},
 		"q1": {
 			0:["q1"],
 			1:["q1","q2"]
@@ -39,7 +44,6 @@ var toupleforContaining00Or11 = {
 			0:["q4"],
 			1:["q4"]
 		}
-
 	}
 }
 
@@ -66,6 +70,37 @@ var toupleForStringThatLenghtIsDivisibleByTwoAndThree = {
 		},
 		"q6" : {
 			0:["q4"]
+		}
+
+	}
+}
+
+var toupleForStringThatContainEvenNumberOfZerosOrOne = {
+	"alphabet"	: [0,1],
+	"initialState"	: ["q1"],
+	"finalState"	: ["q4", "q2"],
+	"setOfState"	: ["q1","q2","q3","q4","q5"],
+	"transitionFunction"	: {
+		"q1" : {
+			"epsilon": ["q2", "q4"],
+			0:[],
+			1:[]
+		},
+		"q2" : {
+			0:["q3"],
+			1:["q2"]
+		},
+		"q3" : {
+			0:["q2"],
+			1:["q3"]
+		},
+		"q4" : {
+			0:["q4"],
+			1:["q5"]
+		},
+		"q5" : {
+			0:["q5"],
+			1:["q4"]
 		}
 
 	}
@@ -115,6 +150,18 @@ describe("nfaGenerator test", function() {
 		})
 		it("it should pass when string doesn't belong to alphabet set", function(){
 			assert.isFalse(divisibleByTwoAndThree("11111"))
+		})
+	})
+	describe("string that has even number of zeros of one in middle", function(){
+		var evenNumberInMiddle = nfaGenerator(toupleForStringThatContainEvenNumberOfZerosOrOne)
+		it("should Pass for string that has for zeros in middle 100001", function(){
+			assert.isTrue(evenNumberInMiddle("100001"))
+		})
+		it("should fail for string that has for one in middle 1111000001", function(){
+			assert.isFalse(evenNumberInMiddle("1111000001"))
+		})
+		it("should pass for string that has for one in middle 00001", function(){
+			assert.isTrue(evenNumberInMiddle("00001"))
 		})
 	})
 })
