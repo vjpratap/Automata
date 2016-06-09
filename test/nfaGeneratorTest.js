@@ -6,25 +6,21 @@ var touple = {
 	"alphabet": [0,1], 
 	"transitionFunction": {
 		"q3":{
-			"epsilon" :["q1"],
-			0: [],
-			1: []
+			"e" :["q1"],
 		},
 		"q1": {
 			0:["q1"],
 			1:["q1","q2"]
 		}, 
 		"q2": {
-			0:[], 
-			1:[]
 		}
 	}, 
-	"initialState": ["q1"], 
+	"initialState": "q1", 
 	"finalState": ["q2"]
 }
 var toupleforContaining00Or11 = {
 	"alphabet"	: [0,1],
-	"initialState"	: ["q1"],
+	"initialState"	: "q1",
 	"finalState"	: ["q4"],
 	"setOfState"	: ["q1","q2","q3","q4"],
 	"transitionFunction"	: {
@@ -34,10 +30,8 @@ var toupleforContaining00Or11 = {
 		},
 		"q2" : {
 			0:["q4"],
-			1:[]
 		},
 		"q3" : {
-			0:[],
 			1:["q4"]
 		},
 		"q4" : {
@@ -49,7 +43,7 @@ var toupleforContaining00Or11 = {
 
 var toupleForStringThatLenghtIsDivisibleByTwoAndThree = {
 	"alphabet"	: [0],
-	"initialState"	: ["q1"],
+	"initialState"	: "q1",
 	"finalState"	: ["q3", "q6"],
 	"setOfState"	: ["q1","q2","q3","q4", "q5", "q5"],
 	"transitionFunction"	: {
@@ -77,14 +71,12 @@ var toupleForStringThatLenghtIsDivisibleByTwoAndThree = {
 
 var toupleForStringThatContainEvenNumberOfZerosOrOne = {
 	"alphabet"	: [0,1],
-	"initialState"	: ["q1"],
+	"initialState"	: "q1",
 	"finalState"	: ["q4", "q2"],
 	"setOfState"	: ["q1","q2","q3","q4","q5"],
 	"transitionFunction"	: {
 		"q1" : {
-			"epsilon": ["q2", "q4"],
-			0:[],
-			1:[]
+			"e": ["q2", "q4"],
 		},
 		"q2" : {
 			0:["q3"],

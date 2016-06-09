@@ -22,9 +22,13 @@ generators.nfaGenerator = function(touple){
 			return false;
 		var finalStatesOfString = charString.reduce(function (currentStates, character){
 			return allCurentStatesOfString(touple.transitionFunction, character, currentStates)
-		}, touple.initialState)
-		return isStringFinalStatesContainsFinalState(finalStatesOfString, touple.finalState);
+		}, [touple.initialState])
+		return isStringFinalStatesContainsFinalState(finalStatesWithoutFalsyValue(finalStatesOfString), touple.finalState);
 	}
+}
+
+var finalStatesWithoutFalsyValue = function(finalStatesOfString){
+	return lodash.filter(lodash.flatten(finalStatesOfString))
 }
 
 var isOnlyAlphabetContains = function(charString, alphabet){
@@ -46,8 +50,8 @@ var currentStateChanging = function(transitionFunction, initialState){
 
 var currentStateOfSet = function(transitionFunction, character){
 	return function(currentState){
-		if(transitionFunction[currentState]["epsilon"]){
-			return epsilonStates(transitionFunction, currentState,character).concat(transitionFunction[currentState][character])
+		if(transitionFunction[currentState]["e"]){
+			return epsilonStates(transitionFunction, currentState,character)
 		}
 		return transitionFunction[currentState][character];
 	}
@@ -55,21 +59,18 @@ var currentStateOfSet = function(transitionFunction, character){
 
 var allCurentStatesOfString = function(transitionFunction, character, currentStates){
 	var getAllStates = currentStateOfSet(transitionFunction, character)
+	currentStates = lodash.filter(currentStates, Boolean)
 	var currentStatesOfSets = currentStates.map(getAllStates)
-	return currentStatesOfSets.reduce(getAllCurrentStates)	
+	return lodash.flatten(currentStatesOfSets)
 }
 
 var epsilonStates = function(transitionFunction, currentState, character){
-	var epsilonCurrentStates = transitionFunction[currentState]["epsilon"]
+	var epsilonCurrentStates = transitionFunction[currentState]["e"]
 	return epsilonCurrentStates.map(function(epsilonCurrentState){
-			return transitionFunction[epsilonCurrentState][character]
+		return transitionFunction[epsilonCurrentState][character]
 	})
 }
 
 var isStringFinalStatesContainsFinalState = function(finalStatesOfString, finalStates){
 	return lodash.intersection(finalStatesOfString, finalStates).length > 0;
-}
-
-var getAllCurrentStates = function(previousValue, currentValue){
-	return lodash.union(previousValue, currentValue)
 }

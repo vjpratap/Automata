@@ -80,7 +80,6 @@ var toupleForStringStartsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle = {
 	"finalState" :["q3"]
 }
 
-
 describe("dfaGenerator test", function() {
 	describe("string that end with 1", function() {
 		var endsWith1 = generators.dfaGenerator(toupleForStringEndsWithOne)
