@@ -3,79 +3,74 @@ exports.generators = generators;
 var lodash = require('lodash')
 
 
-generators.dfaGenerator = function(touple){
+generators.dfaGenerator = function(tuple){
 	return function(string){
 		var charString = string.split("");
-		var finalStateOfString = charString.reduce(function (currentState, character){
-			return touple.transitionFunction[currentState][character];
-		}, touple.initialState)
-		return lodash.includes(touple.finalState, finalStateOfString)	
+		var finalStateOfString = charString.reduce(function (currentState, alphabet){
+			return tuple.transitionFunction[currentState][alphabet];
+		}, tuple.initialState)
+		return lodash.includes(tuple.finalState, finalStateOfString)	
 	} 
 }
 
-generators.nfaGenerator = function(touple){
+generators.nfaGenerator = function(tuple){
 	return function(string) {
-		var charString = string.split("")
-		var finalStatesOfString
-		if(!string.length && touple.transitionFunction[touple.initialState]["e"]){
-			return emptyStringHandler(touple.transitionFunction,touple.initialState, touple.finalState)
-		}
-		var finalStatesOfString = charString.reduce(function (currentStates, character){
-			return allStates(touple.transitionFunction, character, currentStates)
-		}, [touple.initialState])
-		return isStringFinalStatesContainsFinalState(finalStatesWithoutFalsyValue(finalStatesOfString), touple.finalState);
+		var finalStatesOfMachine = getFinalStatesOfMachine(tuple, string)
+		return lodash.intersection(lodash.filter(lodash.flatten(finalStatesOfMachine)), tuple.finalState).length > 0
 	}
 }
 
-var emptyStringHandler = function(transitionFunction, initialState,finalState){
-	var finalStates = transitionFunction[initialState]["e"].map(function(state){
-		return transitionFunction[state]["e"] ? transitionFunction[state]["e"].concat(state) : state
-	})
-	return isStringFinalStatesContainsFinalState(finalStatesWithoutFalsyValue(finalStates), finalState);
-}
-
-var finalStatesWithoutFalsyValue = function(finalStatesOfString){
-	return lodash.filter(lodash.flatten(finalStatesOfString))
-}
-
-var currentStateChanging = function(transitionFunction, initialState){
-	return function(currentState, character){
-		return transitionFunction[initialState][character]
+var getFinalStatesOfMachine = function(tuple, string){
+	var charString = string.split("")
+	if(!string.length && tuple.transitionFunction[tuple.initialState]["e"]){
+		return emptyStringHandler(tuple)
 	}
+	var initialState = getInitialStateHandlingEpsiloneState(tuple)
+	var finalStates = charString.reduce(function(currentStates, alphabet){
+		return allStatesOfMachine(tuple.transitionFunction, alphabet, currentStates)
+	},initialState)
+	return finalStates
 }
 
-var currentStateOfSet = function(transitionFunction, character){
+var getInitialStateHandlingEpsiloneState = function(tuple){
+	return lodash.compact(lodash.flatten(emptyStringHandler(tuple).concat(tuple.initialState)))
+}
+
+var emptyStringHandler = function(tuple){
+	var addStatesWithEpsiloneStates = addingStateInEpsilone(tuple.transitionFunction)
+	return tuple.transitionFunction[tuple.initialState]["e"].map(addStatesWithEpsiloneStates)
+}
+
+var getCurrentStates = function(transitionFunction, alphabet){
 	return function(currentState){
 		if(transitionFunction[currentState]["e"]){
-			return epsilonStates(transitionFunction, currentState,character).concat(transitionFunction[currentState][character])
+			return epsilonStates(transitionFunction, currentState,alphabet).concat(transitionFunction[currentState][alphabet])
 		}
-		return transitionFunction[currentState][character];
+		return transitionFunction[currentState][alphabet];
 	}
 }
 
-var allCurentStatesOfString = function(transitionFunction, character, currentStates){
-	var getAllStates = currentStateOfSet(transitionFunction, character)
+var allCurentStatesOfMachine = function(transitionFunction, alphabet, currentStates){
+	var getAllStates = getCurrentStates(transitionFunction, alphabet)
 	currentStates = lodash.filter(currentStates, Boolean)
-	var currentStatesOfSets = currentStates.map(getAllStates)
-	return lodash.flatten(currentStatesOfSets)
+	return lodash.flatten(currentStates.map(getAllStates))
 }
 
-var allStates = function(transitionFunction, character,currentStates){
-	var allStates = allCurentStatesOfString(transitionFunction, character, currentStates)
-	var states = lodash.flattenDeep(lodash.filter(allStates, Boolean)).map(function(state){
-		return transitionFunction[state]["e"] ? transitionFunction[state]["e"].concat(state) : state
-	})
-	return lodash.flattenDeep(states)
+var allStatesOfMachine = function(transitionFunction, alphabet,currentStates){
+	var allStates = allCurentStatesOfMachine(transitionFunction, alphabet, currentStates)
+	var addStatesWithEpsiloneStates = addingStateInEpsilone(transitionFunction)
+	var states = lodash.compact(lodash.flattenDeep(allStates))
+	return lodash.flattenDeep(states.map(addStatesWithEpsiloneStates))
+}
+var addingStateInEpsilone = function(transitionFunction){
+	return function(state){
+		return transitionFunction[state]["e"] ? transitionFunction[state]["e"].concat(state) : state;
+	}
 }
 
-
-var epsilonStates = function(transitionFunction, currentState, character){
+var epsilonStates = function(transitionFunction, currentState, alphabet){
 	var epsilonCurrentStates = transitionFunction[currentState]["e"]
 	return epsilonCurrentStates.map(function(epsilonCurrentState){
-		return transitionFunction[epsilonCurrentState][character]
+		return transitionFunction[epsilonCurrentState][alphabet]
 	})
-}
-
-var isStringFinalStatesContainsFinalState = function(finalStatesOfString, finalStates){
-	return lodash.intersection(finalStatesOfString, finalStates).length > 0;
 }
