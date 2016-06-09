@@ -94,6 +94,36 @@ var toupleForStringThatContainEvenNumberOfZerosOrOne = {
 			0:["q5"],
 			1:["q4"]
 		}
+	}
+}
+
+var touple3 = {
+	"alphabet": [0,1],
+	"initialState": "q1",
+	"finalState": ["q3", "q6"],
+	"setOfState": ["q1","q2","q3","q4","q5","q6","q7"],
+	"transitionFunction"	: {
+		"q1" : {
+			"e": ["q2", "q5"],
+		},
+		"q2" : {
+			0:["q3"],
+		},
+		"q3" : {
+			1:["q4"]
+		},
+		"q4" : {
+			0:["q3"],
+		},
+		"q5" : {
+			1:["q6"]
+		},
+		"q6" : {
+			0:["q7"],
+		},
+		"q7" : {
+			1:["q6"]
+		}
 
 	}
 }
@@ -154,6 +184,12 @@ describe("nfaGenerator test", function() {
 		})
 		it("should pass for string that has for one in middle 00001", function(){
 			assert.isTrue(evenNumberInMiddle("00001"))
+		})
+	})
+	describe("string that has even number of zeros of one in middle", function(){
+		var startAndEndsWithSameCharacter = nfaGenerator(touple3)
+		it("should Pass for string that has for zeros in middle 0", function(){
+			assert.isTrue(startAndEndsWithSameCharacter("0"))
 		})
 	})
 })
