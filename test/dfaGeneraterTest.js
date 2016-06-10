@@ -3,15 +3,15 @@ var generators = require("../src/dfaGenerator.js").generators;
 
 var toupleForStringEndsWithOne = {
 	"setOfState": ["q1","q2"], 
-	"alphabet": [0,1], 
+	"alphabet": ["0","1"], 
 	"transitionFunction": {
 		"q1": {
-			0:"q1",
-			1:"q2"
+			"0":"q1",
+			"1":"q2"
 		}, 
 		"q2": {
-			0:"q1", 
-			1: "q2"}
+			"0":"q1", 
+			"1": "q2"}
 		}, 
 	"initialState": "q1", 
 	"finalState": ["q2"]
@@ -92,9 +92,6 @@ describe("dfaGenerator test", function() {
 		it("should pass for string 1001", function(){
 			assert.isTrue(endsWith1("1001"))
 		})
-		it("it should fail when string doesn't belong to alphabet set", function(){
-			assert.isFalse(endsWith1("1021"))
-		})
 	})
 	describe("string lenght is divisible by two and three", function(){
 		var divisibleByTwoAndThree = generators.dfaGenerator(toupleForStringThatLenghtIsDivisibleByTwoAndThree)
@@ -103,9 +100,6 @@ describe("dfaGenerator test", function() {
 		})
 		it("it should fail for string that lenght is five", function(){
 			assert.isFalse(divisibleByTwoAndThree("00000"))
-		})
-		it("it should fail when string doesn't belong to alphabet set", function(){
-			assert.isFalse(divisibleByTwoAndThree("11111"))
 		})
 	})
 	describe("string starts with double one ends with double one and even number of zeros in middle", function(){
@@ -124,9 +118,6 @@ describe("dfaGenerator test", function() {
 		})
 		it("it should pass when string starts with single one 1000011", function(){
 			assert.isFalse(startsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle("1000011"))
-		})
-		it("it should fail when string doesn't belong to alphabet set 110002111", function(){
-			assert.isFalse(startsAndEndsWithDoubleOneAndEvenNumberOfZerosInMiddle("110002111"))
 		})
 	})
 })

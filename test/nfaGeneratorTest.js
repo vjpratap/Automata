@@ -3,14 +3,14 @@ var nfaGenerator = require("../src/dfaGenerator.js").generators.nfaGenerator;
 
 var touple = {
 	"setOfState": ["q3","q1","q2"], 
-	"alphabet": [0,1], 
+	"alphabet": ["0","1"], 
 	"transitionFunction": {
 		"q3":{
 			"e" :["q1"],
 		},
 		"q1": {
-			0:["q1"],
-			1:["q1","q2"]
+			"0":["q1"],
+			"1":["q1","q2"]
 		}, 
 		"q2": {
 		}
@@ -19,24 +19,24 @@ var touple = {
 	"finalState": ["q2"]
 }
 var toupleforContaining00Or11 = {
-	"alphabet"	: [0,1],
+	"alphabet"	: ["0","1"],
 	"initialState"	: "q1",
 	"finalState"	: ["q4"],
 	"setOfState"	: ["q1","q2","q3","q4"],
 	"transitionFunction"	: {
 		"q1" : {
-			0:["q1","q2"],
-			1:["q1","q3"]
+			"0":["q1","q2"],
+			"1":["q1","q3"]
 		},
 		"q2" : {
-			0:["q4"],
+			"0":["q4"],
 		},
 		"q3" : {
-			1:["q4"]
+			"1":["q4"]
 		},
 		"q4" : {
-			0:["q4"],
-			1:["q4"]
+			"0":["q4"],
+			"1":["q4"]
 		}
 	}
 }
@@ -137,9 +137,6 @@ describe("nfaGenerator test", function() {
 		it("it should fail when string is not ends with one 10010", function() {
 			assert.isFalse(endsWith1("10010"))
 		})
-		it("it should fail when string doesn't belong to alphabet set", function(){
-			assert.isFalse(endsWith1("1021"))
-		})
 	})
 	describe("string that contains 11 or 00", function() {
 		var stringContainsDoubleZeroOrDoubleOne = nfaGenerator(toupleforContaining00Or11)
@@ -151,9 +148,6 @@ describe("nfaGenerator test", function() {
 		})
 		it("it should pass for 11", function() {
 			assert.isTrue(stringContainsDoubleZeroOrDoubleOne("11"))
-		})
-		it("it should fail when there is no zeros and ones it sequence 0101010", function() {
-			assert.isFalse(stringContainsDoubleZeroOrDoubleOne("0101010"))
 		})
 		it("it should fail when string doesn't belong to alphabet set", function(){
 			assert.isFalse(stringContainsDoubleZeroOrDoubleOne("1021"))
@@ -169,9 +163,6 @@ describe("nfaGenerator test", function() {
 		})
 		it("it should fail for string that lenght is nine", function(){
 			assert.isTrue(divisibleByTwoAndThree("000000000"))
-		})
-		it("it should pass when string doesn't belong to alphabet set", function(){
-			assert.isFalse(divisibleByTwoAndThree("11111"))
 		})
 	})
 	describe("string that has even number of zeros of one in middle", function(){

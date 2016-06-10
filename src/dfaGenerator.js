@@ -23,7 +23,7 @@ generators.nfaGenerator = function(tuple){
 var getFinalStatesOfMachine = function(tuple, string){
 	var charString = string.split("")
 	if(!string.length && tuple.transitionFunction[tuple.initialState]["e"]){
-		return emptyStringHandler(tuple)
+		return epsilonTraverser(tuple.transitionFunction,[tuple.initialState])
 	}
 	var initialState = getInitialStateHandlingEpsiloneState(tuple)
 	var finalStates = charString.reduce(function(currentStates, alphabet){
@@ -33,21 +33,31 @@ var getFinalStatesOfMachine = function(tuple, string){
 }
 
 var getInitialStateHandlingEpsiloneState = function(tuple){
-	return lodash.compact(lodash.flatten(emptyStringHandler(tuple).concat(tuple.initialState)))
+	var addStatesWithEpsiloneStates = addingStateInEpsilone(tuple.transitionFunction)
+	var startingStates = epsilonTraverser(tuple.transitionFunction, [tuple.initialState])
+	return lodash.compact(lodash.flatten(startingStates.concat(tuple.initialState)))
 }
 
-var emptyStringHandler = function(tuple){
-	var addStatesWithEpsiloneStates = addingStateInEpsilone(tuple.transitionFunction)
-	return tuple.transitionFunction[tuple.initialState]["e"].map(addStatesWithEpsiloneStates)
+var epsilonTraverser = function(transitionFunction,initialState){
+	var addStatesWithEpsiloneStates = addingStateInEpsilone(transitionFunction)
+	var compareStates = initialState;
+	var currentInitialState = lodash.union(lodash.flatten(initialState.map(addStatesWithEpsiloneStates)))
+	if (currentInitialState.length == compareStates.length)
+		return initialState
+	return epsilonTraverser(transitionFunction, currentInitialState)
 }
 
 var getCurrentStates = function(transitionFunction, alphabet){
 	return function(currentState){
-		if(transitionFunction[currentState]["e"]){
-			return epsilonStates(transitionFunction, currentState,alphabet).concat(transitionFunction[currentState][alphabet])
+		if(isTransitionerValidForAlphabet(transitionFunction, currentState, alphabet)){
+			var states = transitionFunction[currentState][alphabet]
+			return lodash.union(states.concat(epsilonTraverser(transitionFunction, states)))
 		}
-		return transitionFunction[currentState][alphabet];
 	}
+}
+
+var isTransitionerValidForAlphabet = function(transitionFunction, currentState, alphabet){
+	return transitionFunction[currentState] && transitionFunction[currentState][alphabet]
 }
 
 var allCurentStatesOfMachine = function(transitionFunction, alphabet, currentStates){
@@ -60,17 +70,11 @@ var allStatesOfMachine = function(transitionFunction, alphabet,currentStates){
 	var allStates = allCurentStatesOfMachine(transitionFunction, alphabet, currentStates)
 	var addStatesWithEpsiloneStates = addingStateInEpsilone(transitionFunction)
 	var states = lodash.compact(lodash.flattenDeep(allStates))
-	return lodash.flattenDeep(states.map(addStatesWithEpsiloneStates))
+	return lodash.union(lodash.flattenDeep(states.map(addStatesWithEpsiloneStates)))
 }
 var addingStateInEpsilone = function(transitionFunction){
 	return function(state){
-		return transitionFunction[state]["e"] ? transitionFunction[state]["e"].concat(state) : state;
+		return (isTransitionerValidForAlphabet(transitionFunction, state, "e")) ? 
+		transitionFunction[state]["e"].concat(state) : state;
 	}
-}
-
-var epsilonStates = function(transitionFunction, currentState, alphabet){
-	var epsilonCurrentStates = transitionFunction[currentState]["e"]
-	return epsilonCurrentStates.map(function(epsilonCurrentState){
-		return transitionFunction[epsilonCurrentState][alphabet]
-	})
 }
